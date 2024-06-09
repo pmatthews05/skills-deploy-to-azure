@@ -1,6 +1,8 @@
 name: Deploy to stagin
 
 on:
+ workflow_dispatch:
+  
  pull_request:
    types: [labeled]
 
@@ -8,9 +10,7 @@ env:
  IMAGE_REGISTRY_URL: ghcr.io
  DOCKER_IMAGE_NAME: pmatthews05-azure-ttt
  AZURE_WEBAPP_NAME: pmatthews05-ttt-app
-
-permissions:
-  contents: write
+ EXTRA: 123
 
 jobs:
  build:
@@ -19,12 +19,14 @@ jobs:
    runs-on: ubuntu-latest
 
    steps:
-     - uses: actions/checkout@4
+     - uses: actions/checkout@v4
+     
      - uses: actions/setup-node@v4
        with:
          node-version: 16
      - name: npm install and build webpack
        run: |
+         npm update --save
          npm install
          npm run build
      - uses: actions/upload-artifact@v4
@@ -34,6 +36,9 @@ jobs:
 
  Build-Docker-Image:
    runs-on: ubuntu-latest
+   permissions:
+    contents: read
+    packages: write
    needs: build
    name: Build image and store in GitHub Container Registry
    steps:
@@ -71,6 +76,9 @@ jobs:
 
  Deploy-to-Azure:
    runs-on: ubuntu-latest
+   permissions:
+    contents: read
+    packages: write
    needs: Build-Docker-Image
    name: Deploy app container to Azure
    steps:
