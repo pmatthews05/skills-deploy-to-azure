@@ -14,6 +14,9 @@ env:
   ###############################################
   AZURE_WEBAPP_NAME: pmatthews05-ttt-app
 
+permissions:
+  contents: write
+
 jobs:
   setup-up-azure-resources:
     runs-on: ubuntu-latest
@@ -45,7 +48,7 @@ jobs:
       - name: Configure webapp to use GHCR
         if: success()
         run: |
-          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.CR_PAT}} --docker-registry-server-url https://${{env.IMAGE_REGISTRY_URL}} --docker-registry-server-user ${{github.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{ secrets.GITHUB_TOKEN }} --docker-registry-server-url https://${{env.IMAGE_REGISTRY_URL}} --docker-registry-server-user ${{github.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
 
   destroy-azure-resources:
     runs-on: ubuntu-latest
