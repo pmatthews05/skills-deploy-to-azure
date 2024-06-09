@@ -27,6 +27,7 @@ jobs:
          node-version: 16
      - name: npm install and build webpack
        run: |
+         npm update --save
          npm install
          npm run build
      - uses: actions/upload-artifact@v4
