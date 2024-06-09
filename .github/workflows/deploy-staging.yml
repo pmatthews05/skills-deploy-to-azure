@@ -9,6 +9,9 @@ env:
  DOCKER_IMAGE_NAME: pmatthews05-azure-ttt
  AZURE_WEBAPP_NAME: pmatthews05-ttt-app
 
+permissions:
+  contents: write
+
 jobs:
  build:
    if: contains(github.event.pull_request.labels.*.name, 'stage')
